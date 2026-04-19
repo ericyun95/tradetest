@@ -1031,11 +1031,125 @@ def _is_relevant(result: dict, product_terms: list) -> bool:
     return any(t in text for t in product_terms)
 
 
+# 완전히 걸러야 할 도메인 / 경로 패턴
+_SKIP_DOMAINS = {
+    "wikipedia.org", "youtube.com", "amazon.com", "alibaba.com", "zhihu.com",
+    "reddit.com", "naver.com", "tistory.com", "blogspot.com", "researchgate.net",
+    "academia.edu", "scholar.google", "semanticscholar.org", "jstor.org",
+    "unece.org", "un.org", "fao.org", "oecd.org", "worldbank.org",
+    "gov", "gc.ca", "europa.eu", "customs.go.kr",
+    # 시장조사·뉴스·데이터 서비스
+    "reportlinker.com", "statista.com", "mordorintelligence.com",
+    "grandviewresearch.com", "marketsandmarkets.com",
+    "tradeimex.in", "volza.com", "importyeti.com",
+    "asiafoodbeverages.com", "foodnavigator.com", "just-food.com",
+    "bairdmaritime.com", "intrafish.com",
+    # 제품 목록 사이트
+    "tradewheel.com", "21food.com", "made-in-china.com",
+    "ec21.com", "ecplaza.net",
+}
+_SKIP_URL_EXT  = (".pdf", ".doc", ".docx", ".ppt", ".xls")
+_SKIP_TITLE_KW = (
+    "publication", "research", "study", "journal", "paper", "report",
+    "classification", "nomenclature", "statistics", "handbook", "guideline",
+    "this publication", "extends and updates", "coicop", "fao ", "hs-0",
+)
+# 기업임을 나타내는 단어
+_COMPANY_KW = (
+    "ltd", "co.", "inc.", "corp", "gmbh", "s.a.", "llc", "k.k.", "pvt",
+    "limited", "trading", "import", "export", "wholesale", "distributor",
+    "supplier", "manufacturer", "seafood", "food", "company", "group",
+    "industry", "enterprise", "international", "global",
+)
+_BIZ_DOMAINS = ("linkedin.com", "kompass.com", "europages.com", "dnb.com",
+                "yellowpages", "bizbuysell", "manta.com")
+
+
+_GENERIC_TITLES = {
+    "companies", "importers", "exporters", "suppliers", "manufacturers",
+    "buyers", "distributors", "wholesalers", "products", "traders",
+    "directory", "listing", "results", "search", "찾기", "목록",
+}
+_ARTICLE_TITLE_KW = (
+    "how to", "a guide", "a comprehensive", "best way", "tips for",
+    "top 10", "top 5", "ultimate guide", "everything you need",
+    "what is", "why you", "when to", "#tea", "#import", "#wholesale",
+)
+_LISTING_URL_PATTERNS = (
+    "/a/", "/y/", "/category/", "/search/", "/directory/",
+    "/list/", "/results/", "?q=", "&q=", "/businessplace/",
+    "/tag/", "/topic/", "/category_theme/", "/product-category/",
+    "/intelligences/", "/pulse/", "/in/", "/posts/",  # tridge·LinkedIn 비기업
+    "aclick", "doubleclick", "bing.com/a",            # 광고 리다이렉트
+    "/importer.", "/importers.", "buyers-database",   # 바이어 목록 디렉토리
+)
+
+
+def _is_business_result(title: str, url: str) -> bool:
+    """결과가 실제 기업 페이지인지 판별"""
+    t = title.lower().strip()
+    u = url.lower()
+
+    # 빈 제목 또는 너무 짧음
+    if len(t) < 4:
+        return False
+
+    # URL 확장자 필터
+    if any(u.endswith(ext) or f"{ext}?" in u for ext in _SKIP_URL_EXT):
+        return False
+
+    # 카테고리/목록 URL 패턴
+    if any(p in u for p in _LISTING_URL_PATTERNS):
+        return False
+
+    # 스킵 제목 키워드 (논문·보고서)
+    if any(kw in t for kw in _SKIP_TITLE_KW):
+        return False
+
+    # 아티클·가이드·시장보고서 제목
+    if any(kw in t for kw in _ARTICLE_TITLE_KW):
+        return False
+
+    # "Company successfully..." "Fresh X export company" 같은 뉴스 헤드라인 패턴
+    if t.startswith("company ") or " market size" in t or " market report" in t:
+        return False
+
+    # 제목이 단일 단어 일반명사
+    if t.rstrip("s") in _GENERIC_TITLES or t in _GENERIC_TITLES:
+        return False
+
+    # URL 경로가 제목으로 잡힌 경우 (e.g. "sasabo.co.jp/category_theme/abalone")
+    if "/" in title or title.startswith("http"):
+        return False
+
+    # 제목이 해시태그로 시작
+    if t.startswith("#"):
+        return False
+
+    # 비즈니스 디렉토리 도메인의 개별 기업 페이지
+    if any(d in u for d in _BIZ_DOMAINS):
+        # 카테고리 페이지가 아닌 경우만
+        if not any(p in u for p in _LISTING_URL_PATTERNS):
+            return True
+
+    # 기업 키워드 포함 여부
+    if any(kw in t for kw in _COMPANY_KW):
+        return True
+
+    return False
+
+
+def _clean_company_name(title: str) -> str:
+    """제목에서 기업명만 추출"""
+    for sep in [" | ", " - ", " – ", " · ", " : "]:
+        if sep in title:
+            title = title.split(sep)[0].strip()
+    return title[:60]
+
+
 def _parse_results(results: list, product_terms: list, seen_domains: set,
-                   limit: int, need_relevance: bool = True) -> list:
+                   limit: int) -> list:
     from urllib.parse import urlparse
-    skip = {"wikipedia.org", "youtube.com", "amazon.com", "alibaba.com",
-            "zhihu.com", "reddit.com", "naver.com", "tistory.com", "blogspot.com"}
     found = []
     for r in results:
         if len(found) >= limit:
@@ -1045,44 +1159,61 @@ def _parse_results(results: list, product_terms: list, seen_domains: set,
         body  = r.get("body", "").strip()
         if not title or not url:
             continue
+
         domain = urlparse(url).netloc.replace("www.", "")
+
+        # 도메인 중복
         if domain in seen_domains:
             continue
-        if any(s in domain for s in skip):
+
+        # 스킵 도메인
+        if any(s in domain for s in _SKIP_DOMAINS):
             continue
-        if need_relevance and not _is_relevant(r, product_terms):
+
+        # 제품 관련성 체크
+        if not _is_relevant(r, product_terms):
             continue
+
+        # 기업 결과인지 판별
+        if not _is_business_result(title, url):
+            continue
+
         seen_domains.add(domain)
-        found.append({"name": title[:70], "url": url, "reason": body[:120].replace("\n", " ")})
+        found.append({
+            "name":   _clean_company_name(title),
+            "url":    url,
+            "reason": body[:120].replace("\n", " "),
+        })
     return found
 
 
 def search_competitor_companies(country: str, hs_desc: str) -> list:
-    """경쟁국 실제 수출 기업 검색 (제품 관련성 검증 포함)"""
+    """경쟁국 실제 수출 기업 검색"""
     try:
         from ddgs import DDGS
     except ImportError:
         return []
 
     product_terms = _extract_product_terms(hs_desc)
-    english_product = product_terms[0]
+    ep = product_terms[0]
 
     queries = [
-        f'"{english_product}" exporter {country} company brand manufacturer',
-        f'site:kompass.com "{english_product}" {country}',
-        f'site:europages.com "{english_product}" supplier {country}',
-        f'{english_product} brand {country} export wholesale supplier',
+        f'site:kompass.com "{ep}" exporter {country}',
+        f'site:linkedin.com "{ep}" exporter manufacturer {country}',
+        f'site:europages.com "{ep}" {country} supplier',
+        f'"{ep}" exporter manufacturer company {country} brand',
+        f'top {ep} exporter company {country}',
     ]
 
-    seen_domains = set()
-    companies = []
+    seen_domains: set = set()
+    companies: list = []
 
     with DDGS() as ddgs:
         for q in queries:
             if len(companies) >= 2:
                 break
             try:
-                results = list(ddgs.text(q, max_results=6))
+                results = list(ddgs.text(q, max_results=8))
                 time.sleep(0.8)
             except Exception:
                 continue
@@ -1481,31 +1612,32 @@ def get_buyer_channels(hs_code: str, target_country: str) -> list:
 
 
 def search_real_buyers(target_country: str, hs_desc: str) -> list:
-    """DuckDuckGo 크롤링으로 실제 바이어 기업 검색 (제품 관련성 검증 포함)"""
+    """실제 바이어 기업 검색"""
     try:
         from ddgs import DDGS
     except ImportError:
         return []
 
     product_terms = _extract_product_terms(hs_desc)
-    english_product = product_terms[0]
+    ep = product_terms[0]
 
     queries = [
-        f'"{english_product}" importer {target_country} wholesale company',
-        f'site:kompass.com "{english_product}" importer {target_country}',
-        f'site:europages.com "{english_product}" buyer {target_country}',
-        f'{english_product} wholesale distributor {target_country} import company',
+        f'site:kompass.com "{ep}" importer {target_country}',
+        f'site:linkedin.com "{ep}" importer wholesale {target_country}',
+        f'site:europages.com "{ep}" buyer {target_country}',
+        f'"{ep}" importer wholesale company {target_country}',
+        f'top {ep} importer distributor {target_country} company',
     ]
 
-    seen_domains = set()
-    buyers = []
+    seen_domains: set = set()
+    buyers: list = []
 
     with DDGS() as ddgs:
         for q in queries:
             if len(buyers) >= 3:
                 break
             try:
-                results = list(ddgs.text(q, max_results=6))
+                results = list(ddgs.text(q, max_results=8))
                 time.sleep(0.8)
             except Exception:
                 continue
