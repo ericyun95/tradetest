@@ -441,6 +441,65 @@ HS_CODE_DB = [
     {"name": "방탄복",       "code": "620900", "desc": "방탄복·방호장비 / Bulletproof vests",
      "kw": ["방탄복", "방호장비", "bulletproof vest", "body armor", "방탄"]},
 
+    # ── 수산물·해산물
+    {"name": "전복",         "code": "030781", "desc": "전복·활전복 / Abalone, live or fresh",
+     "kw": ["전복", "활전복", "abalone", "전복살", "haliotis"]},
+    {"name": "낙지",         "code": "030741", "desc": "낙지·문어 / Octopus, live or fresh",
+     "kw": ["낙지", "문어", "octopus", "조낙지"]},
+    {"name": "오징어",       "code": "030760", "desc": "오징어·갑오징어 / Squid & cuttlefish",
+     "kw": ["오징어", "꼴뚜기", "갑오징어", "squid", "cuttlefish"]},
+    {"name": "새우",         "code": "030617", "desc": "새우·냉동새우 / Shrimps & prawns",
+     "kw": ["새우", "냉동새우", "shrimp", "prawn", "대하"]},
+    {"name": "게",           "code": "030614", "desc": "게·킹크랩 / Crabs",
+     "kw": ["게", "킹크랩", "꽃게", "대게", "crab", "king crab"]},
+    {"name": "굴",           "code": "030712", "desc": "굴·생굴 / Oysters, live or fresh",
+     "kw": ["굴", "생굴", "석화", "oyster"]},
+    {"name": "홍합",         "code": "030722", "desc": "홍합·담치 / Mussels, live or fresh",
+     "kw": ["홍합", "담치", "mussel"]},
+    {"name": "가리비",       "code": "030732", "desc": "가리비 / Scallops, live or fresh",
+     "kw": ["가리비", "scallop"]},
+    {"name": "가자미",       "code": "030231", "desc": "가자미·넙치 / Flatfish, fresh or chilled",
+     "kw": ["가자미", "넙치", "광어", "flatfish", "flounder", "halibut"]},
+    {"name": "홍어",         "code": "030289", "desc": "홍어·가오리 / Rays & skates, fresh",
+     "kw": ["홍어", "가오리", "skate", "ray", "stingray"]},
+    {"name": "고등어",       "code": "030254", "desc": "고등어 / Mackerel, fresh or chilled",
+     "kw": ["고등어", "mackerel"]},
+    {"name": "갈치",         "code": "030289", "desc": "갈치·칼치 / Hairtail fish",
+     "kw": ["갈치", "칼치", "hairtail", "ribbonfish"]},
+    {"name": "명태",         "code": "030267", "desc": "명태·동태·황태 / Alaska pollack",
+     "kw": ["명태", "동태", "황태", "코다리", "pollack", "alaska pollock"]},
+    {"name": "조기",         "code": "030289", "desc": "조기 / Yellow croaker",
+     "kw": ["조기", "참조기", "yellow croaker", "croaker"]},
+    {"name": "해삼",         "code": "030759", "desc": "해삼 / Sea cucumbers",
+     "kw": ["해삼", "sea cucumber", "holothurian"]},
+    {"name": "미역",         "code": "121220", "desc": "미역·다시마 / Dried seaweed",
+     "kw": ["미역", "다시마", "wakame", "kelp", "seaweed"]},
+    {"name": "어묵",         "code": "160420", "desc": "어묵·수산가공품 / Fish paste products",
+     "kw": ["어묵", "fish cake", "fish paste", "kamaboko", "수산가공품"]},
+    {"name": "건어물",       "code": "030559", "desc": "건어물·건조어류 / Dried fish",
+     "kw": ["건어물", "건조어류", "dried fish", "건멸치", "멸치", "anchovy"]},
+    # ── 축산물
+    {"name": "소고기",       "code": "020130", "desc": "소고기·쇠고기 / Beef, fresh or chilled",
+     "kw": ["소고기", "쇠고기", "한우", "beef", "wagyu", "sirloin"]},
+    {"name": "돼지고기",     "code": "020311", "desc": "돼지고기 / Pork, fresh or chilled",
+     "kw": ["돼지고기", "삼겹살", "pork", "bacon", "ham"]},
+    {"name": "닭고기",       "code": "020711", "desc": "닭고기·닭 / Chicken, fresh or chilled",
+     "kw": ["닭고기", "닭", "chicken", "poultry"]},
+    {"name": "유정란",       "code": "040711", "desc": "유정란·달걀 / Fertilized eggs & eggs",
+     "kw": ["유정란", "달걀", "계란", "egg", "fertilized egg"]},
+    # ── 농산물
+    {"name": "딸기",         "code": "081010", "desc": "딸기·신선딸기 / Strawberries, fresh",
+     "kw": ["딸기", "strawberry", "설향", "신선딸기"]},
+    {"name": "포도",         "code": "080610", "desc": "포도·샤인머스캣 / Grapes, fresh",
+     "kw": ["포도", "샤인머스캣", "grape", "shine muscat"]},
+    {"name": "배",           "code": "080830", "desc": "배·신고배 / Pears, fresh",
+     "kw": ["배", "신고배", "pear", "korean pear", "asian pear"]},
+    {"name": "사과",         "code": "080810", "desc": "사과·부사 / Apples, fresh",
+     "kw": ["사과", "apple", "fuji apple", "홍로"]},
+    {"name": "감",           "code": "081060", "desc": "감·곶감 / Persimmons, fresh or dried",
+     "kw": ["감", "곶감", "persimmon", "dried persimmon", "단감"]},
+    {"name": "인삼뿌리",     "code": "121120", "desc": "인삼·홍삼뿌리 / Ginseng roots",
+     "kw": ["인삼뿌리", "홍삼뿌리", "수삼", "ginseng root", "white ginseng"]},
     # ── 교육/문화
     {"name": "교과서",       "code": "490199", "desc": "책·교과서·출판물 / Books & printed matter",
      "kw": ["책", "교과서", "도서", "출판물", "book", "textbook", "printed matter"]},
@@ -487,7 +546,137 @@ def _sim(a: str, b: str) -> float:
     return SequenceMatcher(None, a, b).ratio()
 
 
+# ──────────────────────────────────────────────
+# HS코드 전수 데이터베이스 (5,600개+)
+# GitHub 공개 데이터 다운로드 후 로컬 캐싱
+# ──────────────────────────────────────────────
+
+HS_FULL_DB_URL = "https://raw.githubusercontent.com/datasets/harmonized-system/master/data/harmonized-system.csv"
+HS_CACHE_FILE  = os.path.join(os.path.dirname(__file__), "hs_full_db.json")
+
+_hs_full_db: list = []   # 런타임 캐시
+
+
+def _load_full_hs_db() -> list:
+    """전체 HS코드 DB 로드 (파일 캐시 → 다운로드 순)"""
+    global _hs_full_db
+    if _hs_full_db:
+        return _hs_full_db
+
+    # 파일 캐시 확인
+    if os.path.exists(HS_CACHE_FILE):
+        try:
+            import json
+            with open(HS_CACHE_FILE, encoding="utf-8") as f:
+                _hs_full_db = json.load(f)
+            return _hs_full_db
+        except Exception:
+            pass
+
+    # 다운로드
+    try:
+        import csv, io, json
+        r = requests.get(HS_FULL_DB_URL, timeout=20)
+        reader = csv.DictReader(io.StringIO(r.text))
+        rows = []
+        for row in reader:
+            code = row.get("hscode", "").replace(".", "").strip()
+            desc = row.get("description", "").strip()
+            if len(code) == 6 and desc:
+                rows.append({"code": code, "desc": desc})
+        _hs_full_db = rows
+        with open(HS_CACHE_FILE, "w", encoding="utf-8") as f:
+            json.dump(rows, f, ensure_ascii=False)
+        return rows
+    except Exception:
+        return []
+
+
+def _translate_to_english(query: str) -> list:
+    """한국어 쿼리를 영어로 번역 (DuckDuckGo 활용)"""
+    try:
+        from ddgs import DDGS
+        with DDGS() as ddgs:
+            results = list(ddgs.translate(query, to="en"))
+            if results and isinstance(results, list) and results[0].get("translated"):
+                return [results[0]["translated"].lower()]
+    except Exception:
+        pass
+    # 폴백: 한국어 → 영어 검색으로 유추
+    try:
+        from ddgs import DDGS
+        with DDGS() as ddgs:
+            results = list(ddgs.text(
+                f"{query} english translation product name", max_results=2
+            ))
+            time.sleep(0.3)
+        terms = []
+        for r in results:
+            title = r.get("title", "").lower()
+            # 영어 단어만 추출
+            import re
+            words = re.findall(r'[a-z]{3,}', title)
+            terms.extend(words[:3])
+        return list(set(terms))[:5]
+    except Exception:
+        return []
+
+
+def _is_korean(text: str) -> bool:
+    return any('\uAC00' <= c <= '\uD7A3' for c in text)
+
+
+def _search_full_db(query: str, top_n: int = 3) -> list:
+    """전체 HS DB에서 키워드 검색 (영문 설명 기반)
+    - 한국어 쿼리는 반드시 영어 번역 후 호출할 것
+    - 영어 쿼리만 여기서 처리
+    """
+    db = _load_full_hs_db()
+    if not db:
+        return []
+
+    # 한국어가 포함된 쿼리는 전체 DB에서 직접 fuzzy 매칭하지 않음
+    if _is_korean(query):
+        return []
+
+    query_l = query.lower().strip()
+    words   = [w for w in query_l.split() if len(w) >= 3]
+    scored  = []
+
+    for item in db:
+        desc_l = item["desc"].lower()
+        score = 0
+
+        if query_l == desc_l:
+            score = 100
+        elif query_l in desc_l:
+            score = 90
+        elif words and all(w in desc_l for w in words):
+            score = 80
+        elif words and any(w in desc_l for w in words):
+            # 매칭된 단어 비율로 점수
+            matched = sum(1 for w in words if w in desc_l)
+            score = int(60 * matched / len(words))
+
+        if score >= 60:
+            scored.append((score, item))
+
+    scored.sort(key=lambda x: x[0], reverse=True)
+    results = []
+    for score, item in scored[:top_n]:
+        results.append({
+            "name": item["desc"][:40],
+            "code": item["code"],
+            "desc": item["desc"],
+            "kw":   [],
+            "match_score": score,
+            "source": "fulldb",
+        })
+    return results
+
+
 def _find_hs_local(query: str, top_n: int = 3) -> list:
+    """기존 로컬 DB (200개+) 키워드 매칭"""
     query_l = query.lower().strip()
     results = []
     for item in HS_CODE_DB:
@@ -510,152 +699,71 @@ def _find_hs_local(query: str, top_n: int = 3) -> list:
     return results[:top_n]
 
 
-def _find_hs_web(query: str) -> list:
-    """로컬 DB 미스 시 DuckDuckGo로 HS코드 탐색"""
-    import re
-    try:
-        from ddgs import DDGS
-    except ImportError:
-        return []
-
-    # 패턴 1: xxxx.xx (3923.21 형식) → 가장 흔한 HS 표기
-    hs_dot4  = re.compile(r'\b(\d{4})[.](\d{2})\b')
-    # 패턴 2: xx.xx.xx (39.23.21 형식)
-    hs_dot2  = re.compile(r'\b(\d{2})[.](\d{2})[.](\d{2})\b')
-    # 패턴 3: 6자리 연속 (392321)
-    hs_6     = re.compile(r'\b(\d{6})\b')
-    # 패턴 4: 10자리 HSK (3923210000)
-    hsk_pat  = re.compile(r'\b(\d{4})(\d{2})\d{4}\b')
-    # 패턴 1과 4를 통합하는 별칭
-    hs_pat   = hs_dot2  # 하위 호환용
-
-    queries = [
-        f"{query} HS코드 품목번호 관세청",
-        f'"{query}" HS code tariff classification export',
-        f"{query} HS code 수출 품목분류 관세",
-        f"{query} 품목번호 관세율표 hscode",
-        f"{query} harmonized code tariff number",
-    ]
-
-    code_hits = {}
-    code_desc = {}
-
-    with DDGS() as ddgs:
-        for q in queries:
-            try:
-                results = list(ddgs.text(q, max_results=6))
-                time.sleep(0.4)
-            except Exception:
-                continue
-            for r in results:
-                text = r.get("title", "") + " " + r.get("body", "")
-                title = r.get("title", "")
-
-                hs_context = bool(re.search(
-                    r'HS|품목번호|관세|tariff|hscode|품목분류|hsn|hts', text, re.IGNORECASE
-                ))
-                if not hs_context:
-                    continue
-
-                def _add(code, weight=1):
-                    ch = int(code[:2]) if code[:2].isdigit() else 0
-                    if ch == 0 or ch >= 98 or len(code) != 6:
-                        return
-                    code_hits[code] = code_hits.get(code, 0) + weight
-                    if code not in code_desc:
-                        code_desc[code] = title[:60]
-
-                # xxxx.xx 형식 (3923.21)
-                for m in hs_dot4.findall(text):
-                    _add(m[0] + m[1], weight=3)
-
-                # xx.xx.xx 형식 (39.23.21)
-                for m in hs_dot2.findall(text):
-                    _add("".join(m), weight=2)
-
-                # 6자리 연속 (392321) — 맥락 있는 경우만
-                for m in hs_6.findall(text):
-                    _add(m, weight=1)
-
-                # HSK 10자리 (3923210000)
-                for m in hsk_pat.findall(text):
-                    _add(m[0] + m[1], weight=2)
-
-    if not code_hits:
-        return []
-
-    sorted_codes = sorted(code_hits.items(), key=lambda x: x[1], reverse=True)
-    out = []
-    for code, cnt in sorted_codes[:3]:
-        out.append({
-            "name": query,
-            "code": code,
-            "desc": f"{query} / {code_desc.get(code, code)}",
-            "kw":   [query],
-            "match_score": min(55 + cnt * 8, 78),
-            "source": "web",
-        })
-    return out
-
-
 def _is_hs_code_input(query: str) -> bool:
-    """입력이 HS코드인지 판별 (4~10자리 숫자, 점/공백 허용)"""
     import re
     clean = re.sub(r'[\s.\-]', '', query.strip())
     return bool(re.match(r'^\d{4,10}$', clean))
 
 
 def _normalize_hs_code(query: str) -> str:
-    """HS코드를 6자리로 정규화"""
     import re
     clean = re.sub(r'[\s.\-]', '', query.strip())
     return clean[:6].ljust(6, '0')
 
 
 def _lookup_hs_desc_by_code(code: str) -> str:
-    """HS코드로 품목 설명 조회 (로컬 → 웹 순)"""
-    # 로컬 DB
+    """HS코드 → 품목명 (로컬 → 전체DB → 웹 순)"""
     for item in HS_CODE_DB:
         if item["code"] == code:
             return item["desc"]
-    # 웹 검색
-    try:
-        from ddgs import DDGS
-        with DDGS() as ddgs:
-            results = list(ddgs.text(f"HS code {code} 품목명 설명", max_results=3))
-            time.sleep(0.3)
-        for r in results:
-            title = r.get("title", "").strip()
-            if title:
-                return f"HS {code} / {title[:50]}"
-    except Exception:
-        pass
+    db = _load_full_hs_db()
+    for item in db:
+        if item["code"] == code:
+            return f"HS {code} / {item['desc']}"
     return f"HS {code}"
 
 
 def find_hs_codes(query: str, top_n: int = 3) -> list:
-    # HS코드 직접 입력 처리
+    """
+    HS코드 탐색 우선순위:
+    1. HS코드 직접 입력 감지
+    2. 로컬 DB 매칭 (200개+ 한국어 키워드)
+    3. 전체 HS DB 영문 검색 (5,600개)
+    4. 한국어 → 영어 번역 후 전체 DB 재검색
+    """
+    # 1. HS코드 직접 입력
     if _is_hs_code_input(query):
         code = _normalize_hs_code(query)
         desc = _lookup_hs_desc_by_code(code)
-        return [{"name": desc.split("/")[0].strip(), "code": code,
+        return [{"name": desc.split("/")[-1].strip(), "code": code,
                  "desc": desc, "kw": [], "match_score": 100, "source": "direct"}]
 
+    # 2. 로컬 DB
     local = _find_hs_local(query, top_n)
-
-    # 로컬에서 충분히 확실한 결과가 있으면 바로 반환
     if local and local[0]["match_score"] >= 75:
         return local[:top_n]
 
-    # 로컬 결과가 약하거나 없으면 웹 검색 병행
-    web = _find_hs_web(query)
-    # 이미 로컬에 있는 코드는 웹 결과에서 제외
+    # 3. 전체 HS DB 영문 검색
+    full = _search_full_db(query, top_n)
     local_codes = {r["code"] for r in local}
-    web_new = [r for r in web if r["code"] not in local_codes]
+    full_new = [r for r in full if r["code"] not in local_codes]
 
-    merged = (local + web_new)
+    merged = local + full_new
+    if merged and merged[0]["match_score"] >= 55:
+        merged.sort(key=lambda x: x["match_score"], reverse=True)
+        return merged[:top_n]
+
+    # 4. 한국어 → 영어 번역 후 재검색
+    en_terms = _translate_to_english(query)
+    for term in en_terms:
+        translated_results = _search_full_db(term, top_n)
+        for r in translated_results:
+            if r["code"] not in {x["code"] for x in merged}:
+                r["desc"] = f"{query} / {r['desc']}"
+                merged.append(r)
+
     merged.sort(key=lambda x: x["match_score"], reverse=True)
-    return merged[:top_n]
+    return merged[:top_n] if merged else []
 
 
 # ──────────────────────────────────────────────
