@@ -174,6 +174,65 @@ HS_CODE_DB = [
     # 반려동물
     {"name": "반려동물용품", "code": "230910", "desc": "반려동물 사료·용품 / Pet food & products",
      "kw": ["반려동물", "펫", "사료", "강아지", "고양이", "pet food", "dog food", "cat food", "pet supplies"]},
+    # 포장/물류
+    {"name": "포장재",       "code": "392321", "desc": "포장재·비닐봉투 / Plastic sacks & bags",
+     "kw": ["포장재", "포장용기", "비닐봉투", "포장지", "포장", "packaging", "plastic bag", "packing material", "포장박스"]},
+    {"name": "종이박스",     "code": "481900", "desc": "종이박스·골판지 / Paper boxes & cartons",
+     "kw": ["종이박스", "박스", "골판지", "carton", "cardboard box", "paper box", "종이포장"]},
+    {"name": "버블랩",       "code": "392220", "desc": "에어캡·완충재 / Bubble wrap & cushioning",
+     "kw": ["버블랩", "에어캡", "완충재", "bubble wrap", "cushioning", "foam"]},
+    {"name": "팔레트",       "code": "441520", "desc": "팔레트·운반대 / Pallets",
+     "kw": ["팔레트", "파레트", "pallet", "목재팔레트"]},
+    # 산업기계/계측
+    {"name": "축중기",       "code": "842389", "desc": "축중기·계량기 / Weighing machinery",
+     "kw": ["축중기", "계량기", "저울", "weighbridge", "weighing machine", "axle scale", "중량측정"]},
+    {"name": "압축기",       "code": "841430", "desc": "압축기·컴프레서 / Compressors",
+     "kw": ["압축기", "컴프레서", "compressor", "에어컴프레서"]},
+    {"name": "펌프",         "code": "841370", "desc": "펌프 / Pumps for liquids",
+     "kw": ["펌프", "pump", "수중펌프", "유압펌프"]},
+    {"name": "밸브",         "code": "848130", "desc": "밸브 / Valves",
+     "kw": ["밸브", "valve", "체크밸브", "볼밸브", "게이트밸브"]},
+    {"name": "베어링",       "code": "848200", "desc": "베어링 / Ball or roller bearings",
+     "kw": ["베어링", "bearing", "볼베어링", "롤러베어링"]},
+    {"name": "금형",         "code": "848010", "desc": "금형·몰드 / Moulds for plastics",
+     "kw": ["금형", "몰드", "mould", "mold", "die casting", "사출금형"]},
+    {"name": "공작기계",     "code": "845710", "desc": "공작기계·머시닝센터 / Machining centres",
+     "kw": ["공작기계", "머시닝센터", "machining centre", "cnc", "선반", "밀링"]},
+    {"name": "용접기",       "code": "851521", "desc": "용접기 / Welding machines",
+     "kw": ["용접기", "용접", "welding machine", "welder"]},
+    {"name": "계측기",       "code": "902610", "desc": "계측기·유량계 / Flow meters & instruments",
+     "kw": ["계측기", "유량계", "압력계", "flow meter", "gauge", "meter", "측정기"]},
+    {"name": "센서",         "code": "902580", "desc": "센서·감지기 / Sensors & detectors",
+     "kw": ["센서", "감지기", "sensor", "detector", "온도센서", "압력센서"]},
+    {"name": "모터",         "code": "850110", "desc": "전동기·모터 / Electric motors",
+     "kw": ["모터", "전동기", "motor", "electric motor", "서보모터"]},
+    {"name": "변압기",       "code": "850420", "desc": "변압기 / Transformers",
+     "kw": ["변압기", "transformer", "트랜스포머"]},
+    {"name": "케이블",       "code": "854430", "desc": "전선·케이블 / Electric cables & wires",
+     "kw": ["케이블", "전선", "cable", "wire", "전력케이블", "광케이블"]},
+    {"name": "파이프",       "code": "730630", "desc": "강관·파이프 / Steel pipes & tubes",
+     "kw": ["파이프", "강관", "배관", "pipe", "tube", "steel pipe"]},
+    {"name": "볼트너트",     "code": "731815", "desc": "볼트·너트·나사 / Bolts, nuts & screws",
+     "kw": ["볼트", "너트", "나사", "bolt", "nut", "screw", "fastener"]},
+    # 건설/건자재
+    {"name": "시멘트",       "code": "252329", "desc": "시멘트 / Portland cement",
+     "kw": ["시멘트", "cement", "포틀랜드시멘트"]},
+    {"name": "유리",         "code": "700510", "desc": "판유리·안전유리 / Float glass",
+     "kw": ["유리", "판유리", "안전유리", "glass", "tempered glass", "강화유리"]},
+    {"name": "타일",         "code": "690720", "desc": "도자기타일·바닥재 / Ceramic tiles",
+     "kw": ["타일", "바닥재", "도자기타일", "ceramic tile", "floor tile"]},
+    # 화학/원료
+    {"name": "합성고무",     "code": "400220", "desc": "합성고무 / Synthetic rubber",
+     "kw": ["합성고무", "고무", "rubber", "synthetic rubber", "엘라스토머"]},
+    {"name": "도료",         "code": "320910", "desc": "도료·페인트 / Paints & coatings",
+     "kw": ["도료", "페인트", "코팅", "paint", "coating", "lacquer"]},
+    {"name": "접착제",       "code": "350691", "desc": "접착제 / Adhesives",
+     "kw": ["접착제", "본드", "adhesive", "glue", "epoxy"]},
+    # 농업/원예
+    {"name": "비료",         "code": "310520", "desc": "비료 / Fertilizers",
+     "kw": ["비료", "fertilizer", "농업비료", "복합비료"]},
+    {"name": "농약",         "code": "380810", "desc": "농약·살충제 / Insecticides & pesticides",
+     "kw": ["농약", "살충제", "제초제", "pesticide", "insecticide", "herbicide"]},
     # 공예/생활
     {"name": "도자기",       "code": "691110", "desc": "도자기·자기 / Porcelain tableware",
      "kw": ["도자기", "자기", "도기", "ceramic", "porcelain", "pottery"]},
@@ -271,10 +330,16 @@ def _find_hs_web(query: str) -> list:
     except ImportError:
         return []
 
-    # HS코드 패턴: 6자리 연속, 또는 xxxx.xx 형식
-    hs_pat = re.compile(r'\b(\d{2})[.\s]?(\d{2})[.\s]?(\d{2})\b')
-    # 10자리 한국 HSK 코드 (앞 6자리가 HS코드)
-    hsk_pat = re.compile(r'\b(\d{4})[\. ](\d{2})\d{4}\b')
+    # 패턴 1: xxxx.xx (3923.21 형식) → 가장 흔한 HS 표기
+    hs_dot4  = re.compile(r'\b(\d{4})[.](\d{2})\b')
+    # 패턴 2: xx.xx.xx (39.23.21 형식)
+    hs_dot2  = re.compile(r'\b(\d{2})[.](\d{2})[.](\d{2})\b')
+    # 패턴 3: 6자리 연속 (392321)
+    hs_6     = re.compile(r'\b(\d{6})\b')
+    # 패턴 4: 10자리 HSK (3923210000)
+    hsk_pat  = re.compile(r'\b(\d{4})(\d{2})\d{4}\b')
+    # 패턴 1과 4를 통합하는 별칭
+    hs_pat   = hs_dot2  # 하위 호환용
 
     queries = [
         f"{query} HS코드 품목번호 site:customs.go.kr OR site:tradenavi.or.kr",
@@ -296,32 +361,35 @@ def _find_hs_web(query: str) -> list:
                 text = r.get("title", "") + " " + r.get("body", "")
                 title = r.get("title", "")
 
-                # HS코드 관련 문맥 단어가 있는 경우만 유효 처리
                 hs_context = bool(re.search(
                     r'HS|품목번호|관세|tariff|hscode|품목분류|hsn|hts', text, re.IGNORECASE
                 ))
                 if not hs_context:
                     continue
 
-                # 일반 6자리 패턴
-                for m in hs_pat.findall(text):
-                    code = "".join(m)
-                    ch = int(code[:2])
-                    if ch == 0 or ch >= 98:
-                        continue
-                    code_hits[code] = code_hits.get(code, 0) + 1
+                def _add(code, weight=1):
+                    ch = int(code[:2]) if code[:2].isdigit() else 0
+                    if ch == 0 or ch >= 98 or len(code) != 6:
+                        return
+                    code_hits[code] = code_hits.get(code, 0) + weight
                     if code not in code_desc:
                         code_desc[code] = title[:60]
 
-                # HSK 10자리 → 앞 6자리 추출
+                # xxxx.xx 형식 (3923.21)
+                for m in hs_dot4.findall(text):
+                    _add(m[0] + m[1], weight=3)
+
+                # xx.xx.xx 형식 (39.23.21)
+                for m in hs_dot2.findall(text):
+                    _add("".join(m), weight=2)
+
+                # 6자리 연속 (392321) — 맥락 있는 경우만
+                for m in hs_6.findall(text):
+                    _add(m, weight=1)
+
+                # HSK 10자리 (3923210000)
                 for m in hsk_pat.findall(text):
-                    code = m[0] + m[1]
-                    ch = int(code[:2])
-                    if ch == 0 or ch >= 98:
-                        continue
-                    code_hits[code] = code_hits.get(code, 0) + 2
-                    if code not in code_desc:
-                        code_desc[code] = title[:60]
+                    _add(m[0] + m[1], weight=2)
 
     if not code_hits:
         return []
@@ -340,7 +408,49 @@ def _find_hs_web(query: str) -> list:
     return out
 
 
+def _is_hs_code_input(query: str) -> bool:
+    """입력이 HS코드인지 판별 (4~10자리 숫자, 점/공백 허용)"""
+    import re
+    clean = re.sub(r'[\s.\-]', '', query.strip())
+    return bool(re.match(r'^\d{4,10}$', clean))
+
+
+def _normalize_hs_code(query: str) -> str:
+    """HS코드를 6자리로 정규화"""
+    import re
+    clean = re.sub(r'[\s.\-]', '', query.strip())
+    return clean[:6].ljust(6, '0')
+
+
+def _lookup_hs_desc_by_code(code: str) -> str:
+    """HS코드로 품목 설명 조회 (로컬 → 웹 순)"""
+    # 로컬 DB
+    for item in HS_CODE_DB:
+        if item["code"] == code:
+            return item["desc"]
+    # 웹 검색
+    try:
+        from ddgs import DDGS
+        with DDGS() as ddgs:
+            results = list(ddgs.text(f"HS code {code} 품목명 설명", max_results=3))
+            time.sleep(0.3)
+        for r in results:
+            title = r.get("title", "").strip()
+            if title:
+                return f"HS {code} / {title[:50]}"
+    except Exception:
+        pass
+    return f"HS {code}"
+
+
 def find_hs_codes(query: str, top_n: int = 3) -> list:
+    # HS코드 직접 입력 처리
+    if _is_hs_code_input(query):
+        code = _normalize_hs_code(query)
+        desc = _lookup_hs_desc_by_code(code)
+        return [{"name": desc.split("/")[0].strip(), "code": code,
+                 "desc": desc, "kw": [], "match_score": 100, "source": "direct"}]
+
     local = _find_hs_local(query, top_n)
 
     # 로컬에서 충분히 확실한 결과가 있으면 바로 반환

@@ -56,7 +56,10 @@ with st.sidebar:
 # ─────────────────────────────────────────────
 col1, col2 = st.columns([3, 1])
 with col1:
-    query = st.text_input("분석할 품목명을 입력하세요", placeholder="예: 라면, 녹차, 스마트폰 ...")
+    query = st.text_input(
+        "품목명 또는 HS Code를 입력하세요",
+        placeholder="예: 라면, 포장재, 축중기 ...  또는  HS코드 직접입력: 190230"
+    )
 with col2:
     search_btn = st.button("🔍 HS Code 검색", use_container_width=True)
 
