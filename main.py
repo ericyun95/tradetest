@@ -16,12 +16,22 @@ import os
 import sys
 import time
 import datetime
+import logging
 import requests
+from requests.adapters import HTTPAdapter
+from urllib3.util.retry import Retry
 from difflib import SequenceMatcher
 from docx import Document
 from docx.shared import Pt, RGBColor, Cm
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 from docx.enum.table import WD_TABLE_ALIGNMENT
+
+# ── 로깅 설정
+logging.basicConfig(
+    level=logging.WARNING,
+    format="[%(levelname)s] %(name)s: %(message)s",
+)
+logger = logging.getLogger("trade_mentor")
 
 # ──────────────────────────────────────────────
 # 로컬 HS Code 데이터베이스
@@ -570,13 +580,14 @@ def _load_full_hs_db() -> list:
             with open(HS_CACHE_FILE, encoding="utf-8") as f:
                 _hs_full_db = json.load(f)
             return _hs_full_db
-        except Exception:
-            pass
+        except Exception as e:
+            logger.warning(f"HS DB 캐시 로드 실패 ({HS_CACHE_FILE}): {e} — 재다운로드 시도")
 
     # 다운로드
     try:
         import csv, io, json
         r = requests.get(HS_FULL_DB_URL, timeout=20)
+        r.raise_for_status()
         reader = csv.DictReader(io.StringIO(r.text))
         rows = []
         for row in reader:
@@ -588,23 +599,26 @@ def _load_full_hs_db() -> list:
         with open(HS_CACHE_FILE, "w", encoding="utf-8") as f:
             json.dump(rows, f, ensure_ascii=False)
         return rows
-    except Exception:
+    except Exception as e:
+        logger.error(f"HS 전체 DB 다운로드 실패: {e}")
         return []
 
 
 def _translate_to_english(query: str) -> list:
-    """한국어 쿼리를 영어로 번역 (DuckDuckGo 활용)"""
+    """한국어 쿼리를 영어로 번역 (DuckDuckGo 활용, 최대 2단 폴백)"""
     try:
         from ddgs import DDGS
         with DDGS() as ddgs:
             results = list(ddgs.translate(query, to="en"))
             if results and isinstance(results, list) and results[0].get("translated"):
                 return [results[0]["translated"].lower()]
-    except Exception:
-        pass
-    # 폴백: 한국어 → 영어 검색으로 유추
+    except Exception as e:
+        logger.warning(f"번역 1단계 실패 ('{query}'): {e}")
+
+    # 폴백: 검색으로 영어 표현 유추
     try:
         from ddgs import DDGS
+        import re
         with DDGS() as ddgs:
             results = list(ddgs.text(
                 f"{query} english translation product name", max_results=2
@@ -612,13 +626,11 @@ def _translate_to_english(query: str) -> list:
             time.sleep(0.3)
         terms = []
         for r in results:
-            title = r.get("title", "").lower()
-            # 영어 단어만 추출
-            import re
-            words = re.findall(r'[a-z]{3,}', title)
+            words = re.findall(r'[a-z]{3,}', r.get("title", "").lower())
             terms.extend(words[:3])
         return list(set(terms))[:5]
-    except Exception:
+    except Exception as e:
+        logger.error(f"번역 2단계 실패 ('{query}'): {e}")
         return []
 
 
@@ -792,6 +804,22 @@ def get_api_key() -> str:
     return key
 
 
+def _make_session(retries: int = 3, backoff: float = 1.0) -> requests.Session:
+    """재시도 전략이 적용된 HTTP 세션 생성 (5xx, 429 자동 재시도)"""
+    session = requests.Session()
+    retry = Retry(
+        total=retries,
+        backoff_factor=backoff,
+        status_forcelist=[429, 500, 502, 503, 504],
+        allowed_methods=["GET"],
+        raise_on_status=False,
+    )
+    adapter = HTTPAdapter(max_retries=retry)
+    session.mount("https://", adapter)
+    session.mount("http://", adapter)
+    return session
+
+
 def _fetch_one_year(hs_code: str, year: int, api_key: str) -> list:
     params = {
         "cmdCode": hs_code,
@@ -802,19 +830,23 @@ def _fetch_one_year(hs_code: str, year: int, api_key: str) -> list:
         "includeDesc": "true",
         "subscription-key": api_key,
     }
+    session = _make_session()
     try:
-        resp = requests.get(COMTRADE_URL, params=params, timeout=30)
+        resp = session.get(COMTRADE_URL, params=params, timeout=30)
         if "text/html" in resp.headers.get("content-type", ""):
+            logger.error("Comtrade API 인증 실패 — API 키를 확인하세요")
             print("    [오류] API 키 인증 실패")
             return []
         resp.raise_for_status()
-        body = resp.json()
-        return body.get("data", [])
+        return resp.json().get("data", [])
     except requests.exceptions.HTTPError as e:
+        logger.error(f"Comtrade HTTP 오류 {e.response.status_code}: {e}")
         print(f"    [오류] HTTP {e.response.status_code}")
     except requests.exceptions.Timeout:
+        logger.error(f"Comtrade 타임아웃 (hs={hs_code}, year={year})")
         print("    [오류] 요청 타임아웃")
     except Exception as e:
+        logger.error(f"Comtrade 예상 외 오류 (hs={hs_code}, year={year}): {e}")
         print(f"    [오류] {e}")
     return []
 
@@ -822,6 +854,7 @@ def _fetch_one_year(hs_code: str, year: int, api_key: str) -> list:
 def _detect_latest_year(hs_code: str, api_key: str) -> int:
     """데이터가 존재하는 가장 최근 연도 탐지"""
     current_year = datetime.date.today().year
+    session = _make_session(retries=2)
     for yr in range(current_year, current_year - 4, -1):
         params = {
             "cmdCode": hs_code, "flowCode": "M", "partnerCode": "0",
@@ -829,13 +862,17 @@ def _detect_latest_year(hs_code: str, api_key: str) -> int:
             "subscription-key": api_key,
         }
         try:
-            r = requests.get(COMTRADE_URL, params=params, timeout=15)
+            r = session.get(COMTRADE_URL, params=params, timeout=15)
             if r.headers.get("content-type", "").startswith("application/json"):
                 if r.json().get("count", 0) > 0:
                     return yr
-        except Exception:
-            pass
-    return current_year - 2  # 탐지 실패 시 2년 전으로 폴백
+        except requests.exceptions.Timeout:
+            logger.warning(f"연도 탐지 타임아웃 (year={yr}), 다음 연도 시도")
+        except Exception as e:
+            logger.warning(f"연도 탐지 실패 (year={yr}): {e}")
+    fallback = current_year - 2
+    logger.error(f"연도 자동 탐지 실패 — 폴백 연도 {fallback} 사용")
+    return fallback
 
 
 def fetch_trade_data(hs_code: str, api_key: str) -> dict:
@@ -926,6 +963,8 @@ def fetch_export_data(hs_code: str, api_key: str) -> tuple:
     """전 세계 국가별 수출 데이터 조회 (경쟁국 파악용)"""
     current_year = datetime.date.today().year
     latest = current_year - 2
+    session = _make_session(retries=2)
+
     print("    수출 데이터 최신 연도 확인 중...", end=" ", flush=True)
     for yr in range(current_year, current_year - 4, -1):
         params = {
@@ -934,13 +973,15 @@ def fetch_export_data(hs_code: str, api_key: str) -> tuple:
             "subscription-key": api_key,
         }
         try:
-            r = requests.get(COMTRADE_URL, params=params, timeout=15)
+            r = session.get(COMTRADE_URL, params=params, timeout=15)
             if r.headers.get("content-type", "").startswith("application/json"):
                 if r.json().get("count", 0) > 0:
                     latest = yr
                     break
-        except Exception:
-            pass
+        except requests.exceptions.Timeout:
+            logger.warning(f"수출 연도 탐지 타임아웃 (year={yr})")
+        except Exception as e:
+            logger.warning(f"수출 연도 탐지 실패 (year={yr}): {e}")
     print(f"{latest}년")
 
     print(f"    {latest}년 수출 데이터 요청 중...", end=" ", flush=True)
@@ -950,11 +991,13 @@ def fetch_export_data(hs_code: str, api_key: str) -> tuple:
         "includeDesc": "true", "subscription-key": api_key,
     }
     try:
-        r = requests.get(COMTRADE_URL, params=params, timeout=30)
+        r = session.get(COMTRADE_URL, params=params, timeout=30)
+        r.raise_for_status()
         data = r.json().get("data", [])
         print(f"{len(data)}건 수집")
         return data, latest
     except Exception as e:
+        logger.error(f"수출 데이터 수집 실패 (hs={hs_code}, year={latest}): {e}")
         print(f"오류: {e}")
         return [], latest
 
@@ -1083,6 +1126,20 @@ _LISTING_URL_PATTERNS = (
     "aclick", "doubleclick", "bing.com/a",            # 광고 리다이렉트
     "/importer.", "/importers.", "buyers-database",   # 바이어 목록 디렉토리
 )
+
+
+# CLAUDE.md 규칙: 필터 항목 수가 임계치를 초과하면 설계 재검토 필요
+_FILTER_THRESHOLD = 30
+_current_filter_count = (
+    len(_SKIP_DOMAINS) + len(_SKIP_URL_EXT) + len(_SKIP_TITLE_KW) +
+    len(_COMPANY_KW) + len(_BIZ_DOMAINS) + len(_GENERIC_TITLES) +
+    len(_ARTICLE_TITLE_KW) + len(_LISTING_URL_PATTERNS)
+)
+if _current_filter_count > _FILTER_THRESHOLD:
+    logger.warning(
+        f"필터 항목 수 {_current_filter_count}개 — 임계치({_FILTER_THRESHOLD}) 초과. "
+        "CLAUDE.md: 설계 에이전트에게 구조 재검토 요청 필요."
+    )
 
 
 def _is_business_result(title: str, url: str) -> bool:
@@ -1215,11 +1272,14 @@ def search_competitor_companies(country: str, hs_desc: str) -> list:
             try:
                 results = list(ddgs.text(q, max_results=8))
                 time.sleep(0.8)
-            except Exception:
+            except Exception as e:
+                logger.warning(f"경쟁사 검색 쿼리 실패 ('{q[:40]}'): {e}")
                 continue
             found = _parse_results(results, product_terms, seen_domains, 2 - len(companies))
             companies.extend(found)
 
+    if not companies:
+        logger.info(f"경쟁사 검색 결과 없음 (country={country}, product={ep})")
     return companies
 
 
@@ -1639,11 +1699,14 @@ def search_real_buyers(target_country: str, hs_desc: str) -> list:
             try:
                 results = list(ddgs.text(q, max_results=8))
                 time.sleep(0.8)
-            except Exception:
+            except Exception as e:
+                logger.warning(f"바이어 검색 쿼리 실패 ('{q[:40]}'): {e}")
                 continue
             found = _parse_results(results, product_terms, seen_domains, 3 - len(buyers))
             buyers.extend(found)
 
+    if not buyers:
+        logger.info(f"바이어 검색 결과 없음 (country={target_country}, product={ep})")
     return [{"name": b["name"], "url": b["url"], "reason": b.get("reason", "")} for b in buyers]
 
 
