@@ -6,8 +6,11 @@ BASE_URL = "https://comtradeapi.un.org/data/v1/get/C/A/HS"
 
 
 def _default_years() -> list[int]:
+    # UN Comtrade 연간(A) 데이터는 1~1.5년 지연됨.
+    # 최신 연도가 일부 국가에 대해 비어 있어도 3개년 추이를 확보하도록
+    # 4개년 창을 조회한 뒤, 국가별로 실제 보유한 연도만 집계한다.
     current = datetime.date.today().year
-    return [current - 3, current - 2, current - 1]
+    return [current - 4, current - 3, current - 2, current - 1]
 
 
 def fetch_top_markets(
@@ -24,6 +27,13 @@ def fetch_top_markets(
         "period": ",".join(str(y) for y in years),
         "cmdCode": hs_code,
         "flowCode": "M",
+        # 집계 필터 — 이게 없으면 reporter×year당 100+개 행(운송수단·2차파트너
+        # 분할)이 반환되어 maxRecords 상한에 걸려 과거 연도가 누락되고,
+        # 중복 합산으로 금액이 뻥튀기된다.
+        "partnerCode": 0,       # World 총계만
+        "partner2Code": 0,      # 2차 파트너 분할 제거
+        "motCode": 0,           # 운송수단 분할 제거
+        "customsCode": "C00",   # 세관절차 집계
         "maxRecords": 500,
         "format": "JSON",
     }
@@ -36,7 +46,7 @@ def fetch_top_markets(
     if not records:
         return []
 
-    # 국가별 연도별 수입액 집계
+    # 국가별 연도별 수입액 집계 (필터 덕분에 reporter-year당 1행)
     aggregated: dict[int, dict] = {}
     for row in records:
         code = row.get("reporterCode")
@@ -64,11 +74,16 @@ def fetch_top_markets(
         )
 
     results.sort(key=lambda x: x["total_value_usd"], reverse=True)
+
+    # 점유율은 조사 대상 20개국 합계 기준 (전 세계가 아님 — 프록시임을 명시)
+    universe_total = sum(r["total_value_usd"] for r in results) or 1
     top = results[:top_n]
 
-    # rank + yoy_change_pct 계산 (실제 보유 연도 기준)
     for i, item in enumerate(top, start=1):
         item["rank"] = i
+        item["share_pct"] = round(item["total_value_usd"] / universe_total * 100, 1)
+
+        # 전년 대비 증감률 — 실제 보유한 최신 2개 연도 기준
         by_year = item["by_year"]
         available = sorted(by_year.keys())
         if len(available) >= 2:
